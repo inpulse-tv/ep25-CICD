@@ -1,0 +1,293 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Dosis&family=Montserrat:wght@200;400;800;1000&display=swap');
+
+h1, h2, h3 {
+	font-family: 'Dosis', sans-serif;
+}
+
+h1 {
+	font-weight : 800;
+	font-size : 3em;
+}
+
+h2 {
+	font-weight : 400;
+	font-size : 2.5em;
+}
+
+h3 {
+	font-weight : 200;
+	font-size : 2em;
+}
+
+body {
+	display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+	width: 100%;
+    height: 100vh;
+	font-family: 'Montserrat', sans-serif;
+	font-size : 1em;
+	margin:0;
+	max-width:900px;
+	margin-left:auto;
+	margin-right:auto;
+	color: rgba(20, 20, 2, 1);
+}
+
+itv-entete {
+	flex-shrink: 0;
+	padding-left:1em;
+	padding-right:1em;
+}
+
+itv-outils-haut {
+	flex-shrink: 0;
+	min-height: 3em;
+
+	display: flex;
+    flex-direction: row;
+	padding-left:1em;
+	padding-right:1em;
+}
+
+itv-scrollable {
+	flex-grow: 1;
+    overflow: auto;
+    min-height: 3em;
+	padding-left:1em;
+	padding-right:1em;
+}
+
+itv-scrollable::-webkit-scrollbar {
+	display: none;
+}
+
+
+	
+itv-outils-bas{
+	flex-shrink: 0;
+	min-height: 3em;
+		
+	display: flex;
+    flex-direction: row;
+	
+	padding-left:1em;
+	padding-right:1em;
+}
+
+itv-outils-espace{
+	flex-shrink: 0;
+	min-height: 0.5em;
+	
+	padding-left:1em;
+	padding-right:1em;
+}
+		
+itv-option {
+	flex: 1 1 0;
+	text-align:center;
+	vertical-align: middle;
+	min-height: 3em;	
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	flex-direction: column;
+}
+itv-option p {
+	margin-top:auto;
+	margin-bottom:auto;
+}
+itv-option:hover, itv-option.option-choisie {
+	background-color:red;
+	color:white;
+}
+
+itv-prix {
+	flex: 1 1 0;
+	display: flex;
+    flex-direction: row;
+}
+itv-prix h2 {
+	flex: 1 1 0;
+	text-align:right;
+	font-size : 2em;
+	vertical-align: middle;
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-right: 1em;
+	
+}
+itv-prix p {
+	flex: 1 1 0;
+	text-align:left;
+	font-size : 2em;
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-left: 1em;
+}
+
+
+itv-plat-principal {
+	color: NavajoWhite;
+	display:block;
+	text-align:center;
+	font-size : 2.2em;
+	font-weight : 1000;
+	padding-top : 1em;
+	-webkit-text-stroke-width: 1px;
+	-webkit-text-stroke-color: Gray;
+}
+
+itv-garniture a{
+	color: HotPink;
+	display:block;
+	text-align:center;
+	font-size : 2.2em;
+	font-weight:1000;
+	text-decoration: none;
+	-webkit-text-stroke-width: 1px;
+	-webkit-text-stroke-color: Gray;
+}
+
+itv-sauce{
+	color: yellow;
+	display:block;
+	text-align:center;
+	font-size : 2.2em;
+	font-weight:1000;
+	-webkit-text-stroke-width: 1px;
+	-webkit-text-stroke-color: Gray;
+}
+
+itv-plat {
+	display:block;
+	
+}
+
+
+
+/**********************************/
+/*           SMARTPHONE           */
+/**********************************/
+@media (max-width: 30em) {
+	
+	.bg-vegan {
+		background: 
+				linear-gradient( rgba(0, 0, 0, 0.5), rgba(50, 20, 20, 1) ) 
+				no-repeat center center fixed,
+				url("https://s3.inpulse.tv/soja.jpg")
+				no-repeat center center fixed;
+		background-size: cover;
+	}
+	
+	.bg-pas-vegan {
+		background: 
+				linear-gradient( rgba(0, 0, 0, 0.5), rgba(50, 20, 20, 1) ) 
+				no-repeat center center fixed,
+				url("https://s3.inpulse.tv/poulet.jpg")
+				no-repeat center center fixed;
+		background-size: cover;
+	}
+	
+	.bg-viandard-sensible {
+		background: 
+				linear-gradient( rgba(0, 0, 0, 0.5), rgba(50, 20, 20, 1) ) 
+				no-repeat center center fixed,
+				url("https://s3.inpulse.tv/blanc_de_poulet_roti.jpg")
+				no-repeat center center fixed;
+		background-size: cover;
+	}
+	itv-plat p {
+		background-color: rgba(0, 0, 0, 0.8);
+		padding:1em;
+		border-radius: 5px;
+	}
+	body {
+		color : white;
+	}
+	img {
+		display:none;
+	}
+	h1 {
+		text-align: center;
+		margin-top:5px;
+		margin-bottom:5px;
+	}
+	h2{
+		text-align: center;
+		letter-spacing: .5rem;
+	}
+	itv-prix {
+		color:gray;
+	}
+	
+	itv-prix h2 {
+		font-size : 1em;
+	}
+
+	h2:active {
+		color: red;
+	}
+	
+	h3 {
+		text-align: center;
+	}
+}
+
+
+/**********************************/
+/*            TABLETTE            */
+/**********************************/
+@media (min-width: 30em) and (max-width : 50em ) {
+	body {
+		background-color: FloralWhite;
+	}
+}
+
+/**********************************/
+/*             LAPTOP             */
+/**********************************/
+@media 
+	(min-width: 30em) and (max-width : 50em ), 
+	(min-width: 50em) {
+	body {
+		background: linear-gradient( rgba(255, 255, 255, 0.3), rgba(50, 255, 255, 1) ) ;
+	}
+	
+	.bg-vegan {
+		background: 
+				linear-gradient( rgba(255, 255, 255, 0.7), rgba(50, 200, 200, 0.8) ) 
+				no-repeat center center fixed,
+				url("https://s3.inpulse.tv/soja.jpg")
+				no-repeat center center fixed;
+		background-size: cover;
+	}
+	
+	.bg-pas-vegan {
+		background: 
+				linear-gradient( rgba(255, 255, 255, 0.7), rgba(50, 200, 200, 0.8) ) 
+				no-repeat center center fixed,
+				url("https://s3.inpulse.tv/poulet.jpg")
+				no-repeat center center fixed;
+		background-size: cover;
+	}
+	
+	.bg-viandard-sensible {
+		background: 
+				linear-gradient( rgba(255, 255, 255, 0.7), rgba(50, 200, 200, 0.8) ) 
+				no-repeat center center fixed,
+				url("https://s3.inpulse.tv/blanc_de_poulet_roti.jpg")
+				no-repeat center center fixed;
+		background-size: cover;
+	}
+	
+	itv-plat p {
+		background-color: rgba(255, 255, 255, 0.5);
+		padding:1em;
+		border-radius: 10px;
+		margin-left:3em;
+		margin-right:3em;
+	}
+}
+
