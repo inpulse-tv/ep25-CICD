@@ -42,7 +42,7 @@ app.MapGet("api/entreesdujour", () =>
         }
         catch (Exception ex)
         {
-            return Results.Json(new { error = ex.Message });
+            return Results.Problem(JsonConvert.SerializeObject(new { error = ex.Message }), statusCode: 503);
         }
     }
 });

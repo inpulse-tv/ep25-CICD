@@ -41,7 +41,7 @@ jobs:
     - name: Build
       run: | 
         dotnet run & 
-        sleep 2 
+        sleep 10 
         [[ $(curl -o /dev/null -s -w "%{http_code}" http://localhost:8000/api/entreesdujour) == "200" ]] 
 
   build: 
