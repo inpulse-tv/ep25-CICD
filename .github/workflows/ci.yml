@@ -76,6 +76,9 @@ jobs:
     needs: [test-backend, test-frontend]
     steps:
     - uses: actions/checkout@v3
+    - name: Run database migration
+      run: ./bootstrap-mysql.sh
+      working-directory: mysql
     - name: Start components
       run: docker compose -f docker-compose.build.yml up -d 
     - name: Run integration test 

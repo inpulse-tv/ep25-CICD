@@ -4,17 +4,17 @@ networks:
   pouletmayo: 
 
 services:
-  bootstrap:
-    image: mysql:8
-    deploy:
-      replicas: 1
-    environment: 
-      - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    networks: 
-      - pouletmayo
-    volumes:
-      - ./mysql:/mysql-script
-    command: /mysql-script/bootstrap-mysql.sh
+  # bootstrap:
+  #   image: mysql:8
+  #   deploy:
+  #     replicas: 1
+  #   environment: 
+  #     - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  #   networks: 
+  #     - pouletmayo
+  #   volumes:
+  #     - ./mysql:/mysql-script
+  #   command: /mysql-script/bootstrap-mysql.sh
 
   backend:
     build: ./backend
