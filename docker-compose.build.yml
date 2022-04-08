@@ -4,22 +4,6 @@ networks:
   pouletmayo: 
 
 services:
-  db:
-    image: mysql:8
-    deploy:
-      replicas: 1
-    environment: 
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    ports:
-      - 3306:3306
-    networks: 
-      - pouletmayo
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
-
   bootstrap:
     image: mysql:8
     deploy:
