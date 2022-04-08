@@ -60,6 +60,18 @@ jobs:
       run: dotnet test --no-restore
 
   integration-test: 
+
+    services:
+      # Label used to access the service container
+      mysql:
+        options: --health-cmd="mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
+        image: mysql:8
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+
     runs-on: ubuntu-latest
     needs: [test-backend, test-frontend]
     steps:
@@ -71,7 +83,7 @@ jobs:
         wget https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz
         tar -xzf k6-v0.37.0-linux-amd64.tar.gz
         chmod +x k6-v0.37.0-linux-amd64/k6
-    - run: k6-v0.37.0-linux-amd64/k6 run k6/script.js
+        k6-v0.37.0-linux-amd64/k6 run k6/script.js
     - name: Stop components
       run: docker compose -f docker-compose.build.yml down 
 
