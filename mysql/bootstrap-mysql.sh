@@ -1,3 +1,3 @@
 #!/bin/bash
-mysql -h localhost -e "CREATE DATABASE pouletmayo"
-mysql -h localhost --default-character-set=utf8 pouletmayo < dump.sql
+mysql -h 127.0.0.1 -e "CREATE DATABASE pouletmayo"
+mysql -h 127.0.0.1 --default-character-set=utf8 pouletmayo < dump.sql
