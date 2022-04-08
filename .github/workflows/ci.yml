@@ -69,7 +69,8 @@ jobs:
     - name: Bootstrap database 
       run: ./bootstrap-mysql.sh
       working-directory: mysql
-    - run: |
+    - name: Run integration test 
+      run: |
         wget https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz
         tar -xzf k6-v0.37.0-linux-amd64.tar.gz
         chmod +x k6-v0.37.0-linux-amd64/k6
