@@ -1,0 +1,49 @@
+version: "3.9"
+
+networks: 
+  pouletmayo: 
+
+services:
+  db:
+    image: mysql:8
+    deploy:
+      replicas: 1
+    environment: 
+      - MYSQL_ROOT_PASSWORD=password
+    ports:
+      - 3306:3306
+    networks: 
+      - pouletmayo
+
+  adminer:
+    image: adminer:4
+    deploy:
+      replicas: 1
+    ports:
+      - 8080:8080
+    networks: 
+      - pouletmayo
+
+  backend:
+    build: ./backend
+    deploy:
+      replicas: 1
+    environment: 
+      - PouletMayo_Db__Host=db
+      - PouletMayo_Db__User=root
+      - PouletMayo_Db__Password=password
+      - PouletMayo_Db__Database=pouletmayo
+    ports:
+      - 8000:80
+    networks: 
+      - pouletmayo
+
+  frontend:
+    build: ./frontend
+    deploy:
+      replicas: 1
+    ports:
+      - 9000:9000
+    networks: 
+      - pouletmayo
+
