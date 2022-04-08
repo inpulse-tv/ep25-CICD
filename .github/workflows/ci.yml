@@ -64,8 +64,10 @@ jobs:
     needs: [test-backend, test-frontend]
     steps:
     - uses: actions/checkout@v3
+    - name: Start components
+      run: docker compose up -f docker-compose.build.yml -d 
     - name: Bootstrap database 
-      run: ./bootstrap.sh 
+      run: ./bootstrap-mysql.sh
       working-directory: mysql
     - run: |
         wget https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz
