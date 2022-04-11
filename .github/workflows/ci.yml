@@ -76,41 +76,42 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test-backend, test-frontend]
     steps:
-    - uses: actions/checkout@v3
-    - name: Run database migration
-      run: ./bootstrap-mysql.sh
-      working-directory: mysql
-    - name: Start components
-      run: docker compose -f docker-compose.build.yml up -d 
-    - name: Run integration test 
-      run: |
-        wget -q https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz
-        tar -xzf k6-v0.37.0-linux-amd64.tar.gz
-        chmod +x k6-v0.37.0-linux-amd64/k6
-        k6-v0.37.0-linux-amd64/k6 run k6/script.js
-    - name: Stop components
-      run: docker compose -f docker-compose.build.yml down 
+    - run: docker network ls
+  #   - uses: actions/checkout@v3
+  #   - name: Run database migration
+  #     run: ./bootstrap-mysql.sh
+  #     working-directory: mysql
+  #   - name: Start components
+  #     run: docker compose -f docker-compose.build.yml up -d 
+  #   - name: Run integration test 
+  #     run: |
+  #       wget -q https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz
+  #       tar -xzf k6-v0.37.0-linux-amd64.tar.gz
+  #       chmod +x k6-v0.37.0-linux-amd64/k6
+  #       k6-v0.37.0-linux-amd64/k6 run k6/script.js
+  #   - name: Stop components
+  #     run: docker compose -f docker-compose.build.yml down 
 
-  build-image:
-    strategy:
-      matrix:
-        component: ["frontend", "backend"]
-    runs-on: ubuntu-latest
-    needs: [integration-test]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+  # build-image:
+  #   strategy:
+  #     matrix:
+  #       component: ["frontend", "backend"]
+  #   runs-on: ubuntu-latest
+  #   needs: [integration-test]
+  #   if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     
-    steps:
-    - uses: actions/checkout@v3
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Login to Docker Hub
+  #     uses: docker/login-action@v1
+  #     with:
+  #       username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #       password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
-    - name: Build the Docker image
-      uses: docker/build-push-action@v2
-      with: 
-        context: ${{ matrix.component }}
-        file: ${{ matrix.component }}/Dockerfile
-        push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/spm-${{ matrix.component }}:${{ env.BRANCH_NAME }}
+  #   - name: Build the Docker image
+  #     uses: docker/build-push-action@v2
+  #     with: 
+  #       context: ${{ matrix.component }}
+  #       file: ${{ matrix.component }}/Dockerfile
+  #       push: true
+  #       tags: ${{ secrets.DOCKERHUB_USERNAME }}/spm-${{ matrix.component }}:${{ env.BRANCH_NAME }}

@@ -1,16 +1,17 @@
-import { check } from 'k6';
+import { describe } from 'https://jslib.k6.io/expect/0.0.4/index.js';
 import http from 'k6/http';
 
 export default function () {
-  const res = http.get('http://localhost:9000');
-  const resBackend = http.get('http://localhost:8000/api/entreesdujour');
-  check(res, {
-    'is frontend status 200': (r) => r.status === 200,
-  });
-  check(resBackend, {
-    'is backend status 200': (r) => r.status === 200,
-  });
-  check(resBackend.json(), {
-    'is response length > 0': (r) => r.length > 0,
+  describe('Fetch today\'s entres', (t) => {
+    const response = http.get('http://localhost:8000/api/entreesdujour');
+
+    t.expect(response.status)
+      .as('response status')
+      .toEqual(200)
+      .and(response)
+      .toHaveValidJson()
+      .and(response.json().length)
+      .as('number of entree')
+      .toBeGreaterThan(0);
   });
 }
