@@ -78,6 +78,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: env | sort 
+    - run: docker info
   #   - name: Run database migration
   #     run: ./bootstrap-mysql.sh
   #     working-directory: mysql
