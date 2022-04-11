@@ -1,9 +1,5 @@
 version: "3.9"
 
-networks: 
-  mysql:
-    external: true  
-
 services:
   backend:
     build: ./backend
@@ -16,8 +12,6 @@ services:
       - PouletMayo_Db__Database=pouletmayo
     ports:
       - 8000:8000
-    networks: 
-      - mysql
     healthcheck:
       test: curl --fail http://localhost:8000/health || exit 1
 
@@ -27,8 +21,6 @@ services:
       replicas: 1
     ports:
       - 9000:9000
-    networks: 
-      - mysql
     healthcheck:
       test: curl --fail http://localhost:9000 || exit 1
 
