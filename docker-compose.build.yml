@@ -9,7 +9,7 @@ services:
     deploy:
       replicas: 1
     environment: 
-      - PouletMayo_Db__Host=db
+      - PouletMayo_Db__Host=mysql
       - PouletMayo_Db__User=root
       - PouletMayo_Db__Password=${MYSQL_PWD}
       - PouletMayo_Db__Database=pouletmayo
