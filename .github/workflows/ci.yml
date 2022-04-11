@@ -77,9 +77,10 @@ jobs:
     needs: [test-backend, test-frontend]
     steps:
     - uses: actions/checkout@v3
+    - name: Compute env variable
+      run: |
+        echo "DOCKER_NETWORK=${{ job.services.mysql.network }}" >> $GITHUB_ENV
     - run: env | sort 
-    - run: docker info
-    - run: hostname
     - name: Run database migration
       run: ./bootstrap-mysql.sh
       working-directory: mysql
