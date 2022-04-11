@@ -47,6 +47,11 @@ app.MapGet("api/entreesdujour", () =>
     }
 });
 
+app.MapGet("/health", () => 
+{
+    return Results.Ok();
+});
+
 app.UseCors();
 
 app.Run();

@@ -11,12 +11,14 @@ services:
     environment: 
       - PouletMayo_Db__Host=db
       - PouletMayo_Db__User=root
-      - PouletMayo_Db__Password=${MYSQL_ROOT_PASSWORD}
+      - PouletMayo_Db__Password=${MYSQL_PWD}
       - PouletMayo_Db__Database=pouletmayo
     ports:
       - 8000:8000
     networks: 
       - pouletmayo
+    healthcheck:
+      test: curl --fail http://localhost:8000/health || exit 1
 
   frontend:
     build: ./frontend
@@ -26,4 +28,14 @@ services:
       - 9000:9000
     networks: 
       - pouletmayo
+    healthcheck:
+      test: curl --fail http://localhost:9000 || exit 1
+
+  wait-for-healthy:
+    image: busybox
+    depends_on: 
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
 
