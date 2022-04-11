@@ -17,7 +17,7 @@ services:
     ports:
       - 8000:8000
     networks: 
-      - pouletmayo
+      - mysql
     healthcheck:
       test: curl --fail http://localhost:8000/health || exit 1
 
@@ -28,7 +28,7 @@ services:
     ports:
       - 9000:9000
     networks: 
-      - pouletmayo
+      - mysql
     healthcheck:
       test: curl --fail http://localhost:9000 || exit 1
 
