@@ -12,7 +12,7 @@ services:
     deploy:
       replicas: 1
     environment: 
-      - PouletMayo_Db__Host=localhost
+      - PouletMayo_Db__Host=mysql
       - PouletMayo_Db__User=root
       - PouletMayo_Db__Password=${MYSQL_PWD}
       - PouletMayo_Db__Database=pouletmayo
@@ -29,12 +29,4 @@ services:
       - 9000:9000
     healthcheck:
       test: curl --fail http://localhost:9000 || exit 1
-
-  wait-for-healthy:
-    image: busybox
-    depends_on: 
-      backend:
-        condition: service_healthy
-      frontend:
-        condition: service_healthy
 
