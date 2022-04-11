@@ -13,53 +13,53 @@ env:
   
 
 jobs:
-  test-frontend: 
-    defaults:
-      run:
-        working-directory: frontend
-    runs-on: ubuntu-latest
+  # test-frontend: 
+  #   defaults:
+  #     run:
+  #       working-directory: frontend
+  #   runs-on: ubuntu-latest
 
-    steps:
+  #   steps:
 
-    - uses: actions/checkout@v3
-    - name: Use Node.js 17
-      uses: actions/setup-node@v3
-      with:
-        node-version: 17
-    - name: Install dependencies
-      run: npm install
-    - name: Launch test 
-      run: npm test
+  #   - uses: actions/checkout@v3
+  #   - name: Use Node.js 17
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       node-version: 17
+  #   - name: Install dependencies
+  #     run: npm install
+  #   - name: Launch test 
+  #     run: npm test
   
-  test-backend: 
-    defaults:
-      run:
-        working-directory: backend
-    runs-on: ubuntu-latest
-    env:
-      PouletMayo_Db__Host: localhost
-      PouletMayo_Db__User: root
-      PouletMayo_Db__Password: ${{ secrets.CI_DB_PASSWORD }}
-      PouletMayo_Db__Database: pouletmayo
+  # test-backend: 
+  #   defaults:
+  #     run:
+  #       working-directory: backend
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     PouletMayo_Db__Host: localhost
+  #     PouletMayo_Db__User: root
+  #     PouletMayo_Db__Password: ${{ secrets.CI_DB_PASSWORD }}
+  #     PouletMayo_Db__Database: pouletmayo
 
-    services:
-      mysql:
-        image: mysql:8
-        ports:
-          - 3306:3306
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+  #   services:
+  #     mysql:
+  #       image: mysql:8
+  #       ports:
+  #         - 3306:3306
+  #       env:
+  #         MYSQL_ROOT_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
 
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET Core SDK 6
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: 6.0.x
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Test
-      run: dotnet test --no-restore
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Setup .NET Core SDK 6
+  #     uses: actions/setup-dotnet@v2
+  #     with:
+  #       dotnet-version: 6.0.x
+  #   - name: Install dependencies
+  #     run: dotnet restore
+  #   - name: Test
+  #     run: dotnet test --no-restore
 
   integration-test: 
 
@@ -79,6 +79,7 @@ jobs:
     - uses: actions/checkout@v3
     - run: env | sort 
     - run: docker info
+    - run: hostname
   #   - name: Run database migration
   #     run: ./bootstrap-mysql.sh
   #     working-directory: mysql
