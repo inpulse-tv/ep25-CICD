@@ -28,5 +28,5 @@ services:
     ports:
       - 9000:9000
     healthcheck:
-      test: curl --fail http://localhost:9000 || exit 1
+      test: curl --fail http://localhost:9000 -o /dev/null || exit 1
 
