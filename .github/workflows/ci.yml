@@ -110,8 +110,8 @@ jobs:
         component: ["frontend", "backend"]
     runs-on: ubuntu-latest
     permissions:
-        packages: write
-        contents: read
+      packages: write
+      contents: read
     needs: [integration-test]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     
@@ -120,6 +120,8 @@ jobs:
 
     - run: |
         echo "BRANCH_NAME=$GITHUB_REF_NAME" >> $GITHUB_ENV
+
+    - run: env | sort 
 
     - name: Log in to registry
         # This is where you will update the PAT to GITHUB_TOKEN
@@ -131,4 +133,4 @@ jobs:
         context: ${{ matrix.component }}
         file: ${{ matrix.component }}/Dockerfile
         push: true
-        tags: ghcr.io/${{ github.repository_owner }}/spm-${{ matrix.component }}:${{ env.GITHUB_REF_NAME }}
+        tags: ghcr.io/${{ github.repository_owner }}/spm-${{ matrix.component }}:${{ env.BRANCH_NAME }}
