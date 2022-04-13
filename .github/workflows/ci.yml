@@ -7,16 +7,13 @@ on:
   pull_request:
     branches:
     - main
-
-env:
-  MYSQL_PWD: ${{ secrets.CI_DB_PASSWORD }}
   
 jobs:
-  test-frontend: 
+  frontend-test: 
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend
-    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -32,16 +29,11 @@ jobs:
     - name: Launch test 
       run: npm test
   
-  test-backend: 
+  backend-test: 
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
-    runs-on: ubuntu-latest
-    env:
-      PouletMayo_Db__Host: localhost
-      PouletMayo_Db__User: root
-      PouletMayo_Db__Password: ${{ secrets.CI_DB_PASSWORD }}
-      PouletMayo_Db__Database: pouletmayo
     services:
       mysql:
         image: mysql:8
@@ -50,6 +42,11 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
         options: --health-cmd="mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      PouletMayo_Db__Host: localhost
+      PouletMayo_Db__User: root
+      PouletMayo_Db__Password: ${{ secrets.CI_DB_PASSWORD }}
+      PouletMayo_Db__Database: pouletmayo
 
     steps:
     - uses: actions/checkout@v3
@@ -72,6 +69,7 @@ jobs:
         ports:
           - 3306:3306
         env:
+          MYSQL_PWD: ${{ secrets.CI_DB_PASSWORD }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
         options: --health-cmd="mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
@@ -80,23 +78,21 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Compute env variable
-      run: |
-        echo "DOCKER_NETWORK=${{ job.services.mysql.network }}" >> $GITHUB_ENV
-
     - name: Run database migration
       run: ./bootstrap-mysql.sh
       working-directory: mysql
 
+    - name: Compute env variable
+      run: |
+        echo "DOCKER_NETWORK=${{ job.services.mysql.network }}" >> $GITHUB_ENV
+        
     - name: Start components
       run: docker compose -f docker-compose.build.yml up -d 
 
-    - name: Run integration test 
-      run: |
-        wget -q https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz
-        tar -xzf k6-v0.37.0-linux-amd64.tar.gz
-        chmod +x k6-v0.37.0-linux-amd64/k6
-        k6-v0.37.0-linux-amd64/k6 run k6/script.js
+    - name: Run  k6 test
+      uses: grafana/k6-action@v0.2.0
+      with:
+        filename: script.js
 
     - name: Stop components
       run: docker compose -f docker-compose.build.yml down 
@@ -129,4 +125,4 @@ jobs:
         context: ${{ matrix.component }}
         file: ${{ matrix.component }}/Dockerfile
         push: true
-        tags: ghcr.io/${{ github.repository_owner }}/spm-${{ matrix.component }}:${{ env.BRANCH_NAME }}
+        tags: ghcr.io/${{ github.repository_owner }}/spm-${{ matrix.component }}:${{ github.ref_name }}
