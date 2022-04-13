@@ -1,4 +1,4 @@
-name: Frontend Continuous integration
+name: Continuous integration
 
 on:
   push:
@@ -6,17 +6,14 @@ on:
     - main
   pull_request:
     branches:
-    - main
-
-env:
-  MYSQL_PWD: ${{ secrets.CI_DB_PASSWORD }}
+    - main 
   
 jobs:
-  test-frontend: 
+  frontend-test: 
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend
-    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -32,16 +29,11 @@ jobs:
     - name: Launch test 
       run: npm test
   
-  test-backend: 
+  backend-test: 
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
-    runs-on: ubuntu-latest
-    env:
-      PouletMayo_Db__Host: localhost
-      PouletMayo_Db__User: root
-      PouletMayo_Db__Password: ${{ secrets.CI_DB_PASSWORD }}
-      PouletMayo_Db__Database: pouletmayo
     services:
       mysql:
         image: mysql:8
@@ -50,6 +42,11 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
         options: --health-cmd="mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      PouletMayo_Db__Host: localhost
+      PouletMayo_Db__User: root
+      PouletMayo_Db__Password: ${{ secrets.CI_DB_PASSWORD }}
+      PouletMayo_Db__Database: pouletmayo
 
     steps:
     - uses: actions/checkout@v3
@@ -74,15 +71,13 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
         options: --health-cmd="mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      MYSQL_PWD: ${{ secrets.CI_DB_PASSWORD }}
 
     runs-on: ubuntu-latest
-    needs: [test-backend, test-frontend]
+    needs: [backend-test, frontend-test]
     steps:
     - uses: actions/checkout@v3
-
-    - name: Compute env variable
-      run: |
-        echo "DOCKER_NETWORK=${{ job.services.mysql.network }}" >> $GITHUB_ENV
 
     - name: Run database migration
       run: ./bootstrap-mysql.sh
@@ -90,13 +85,16 @@ jobs:
 
     - name: Start components
       run: docker compose -f docker-compose.build.yml up -d 
+      env:
+        DOCKER_NETWORK: ${{ job.services.mysql.network }}
 
     - name: Run integration test 
       run: |
         wget -q https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz
         tar -xzf k6-v0.37.0-linux-amd64.tar.gz
         chmod +x k6-v0.37.0-linux-amd64/k6
-        k6-v0.37.0-linux-amd64/k6 run k6/script.js
+        k6-v0.37.0-linux-amd64/k6 run script.js
+      working-directory: k6
 
     - name: Stop components
       run: docker compose -f docker-compose.build.yml down 
@@ -116,10 +114,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Prepare job
-      run: |
-        echo "BRANCH_NAME=$GITHUB_REF_NAME" >> $GITHUB_ENV
-
     - name: Log in to registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
 
@@ -129,4 +123,4 @@ jobs:
         context: ${{ matrix.component }}
         file: ${{ matrix.component }}/Dockerfile
         push: true
-        tags: ghcr.io/${{ github.repository_owner }}/spm-${{ matrix.component }}:${{ env.BRANCH_NAME }}
+        tags: ghcr.io/${{ github.repository_owner }}/spm-${{ matrix.component }}:${{ github.ref_name }}
