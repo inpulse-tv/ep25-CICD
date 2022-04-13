@@ -6,7 +6,7 @@ on:
     - main
   pull_request:
     branches:
-    - main
+    - main 
   
 jobs:
   frontend-test: 
@@ -90,10 +90,13 @@ jobs:
     - name: Start components
       run: docker compose -f docker-compose.build.yml up -d 
 
-    - name: Run  k6 test
-      uses: grafana/k6-action@v0.2.0
-      with:
-        filename: k6/script.js
+    - name: Run integration test 
+      run: |
+        wget -q https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz
+        tar -xzf k6-v0.37.0-linux-amd64.tar.gz
+        chmod +x k6-v0.37.0-linux-amd64/k6
+        k6-v0.37.0-linux-amd64/k6 run script.js
+      working-directory: k6
 
     - name: Stop components
       run: docker compose -f docker-compose.build.yml down 
@@ -112,10 +115,6 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
-
-    - name: Prepare job
-      run: |
-        echo "BRANCH_NAME=$GITHUB_REF_NAME" >> $GITHUB_ENV
 
     - name: Log in to registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
