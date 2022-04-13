@@ -84,8 +84,6 @@ jobs:
       run: |
         echo "DOCKER_NETWORK=${{ job.services.mysql.network }}" >> $GITHUB_ENV
 
-    - run: env | sort 
-
     - name: Run database migration
       run: ./bootstrap-mysql.sh
       working-directory: mysql
@@ -118,10 +116,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - run: |
+    - name: Prepare job
+      run: |
         echo "BRANCH_NAME=$GITHUB_REF_NAME" >> $GITHUB_ENV
-
-    - run: env | sort 
 
     - name: Log in to registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
