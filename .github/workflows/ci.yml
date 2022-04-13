@@ -92,7 +92,7 @@ jobs:
     - name: Run  k6 test
       uses: grafana/k6-action@v0.2.0
       with:
-        filename: script.js
+        filename: k6/script.js
 
     - name: Stop components
       run: docker compose -f docker-compose.build.yml down 
