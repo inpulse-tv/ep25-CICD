@@ -83,12 +83,11 @@ jobs:
       env:
         MYSQL_PWD: ${{ secrets.CI_DB_PASSWORD }}
 
-    - name: Compute env variable
-      run: |
-        echo "DOCKER_NETWORK=${{ job.services.mysql.network }}" >> $GITHUB_ENV
-
     - name: Start components
       run: docker compose -f docker-compose.build.yml up -d 
+      env:
+        DOCKER_NETWORK: ${{ job.services.mysql.network }}
+        MYSQL_PWD: ${{ secrets.CI_DB_PASSWORD }}
 
     - name: Run integration test 
       run: |
